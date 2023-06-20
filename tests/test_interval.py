@@ -135,3 +135,37 @@ def test_contains() -> None:
     assert 2 in Interval(1, 3)
     assert 3 in Interval(1, 3)
     assert 4 not in Interval(1, 3)
+
+
+def test_is_subset_of() -> None:
+    # empty, empty
+    assert Interval().is_subset_of(Interval())
+    # empty, degenerate
+    assert Interval().is_subset_of(Interval(1))
+    # empty, proper
+    assert Interval().is_subset_of(Interval(1, 3))
+
+    # degenerate, empty
+    assert not Interval(1).is_subset_of(Interval())
+    # degenerate, degenerate
+    assert Interval(1).is_subset_of(Interval(1))
+    assert not Interval(0).is_subset_of(Interval(1))
+    # degenerate, proper
+    assert not Interval(0).is_subset_of(Interval(1, 3))
+    assert Interval(1).is_subset_of(Interval(1, 3))
+    assert Interval(2).is_subset_of(Interval(1, 3))
+    assert Interval(3).is_subset_of(Interval(1, 3))
+    assert not Interval(4).is_subset_of(Interval(1, 3))
+
+    # proper, empty
+    assert not Interval(1, 3).is_subset_of(Interval())
+    # proper, degenerate
+    assert not Interval(1, 3).is_subset_of(Interval(0))
+    assert not Interval(1, 3).is_subset_of(Interval(1))
+    assert not Interval(1, 3).is_subset_of(Interval(2))
+    assert not Interval(1, 3).is_subset_of(Interval(3))
+    assert not Interval(1, 3).is_subset_of(Interval(4))
+    # proper, proper
+    assert not Interval(1, 3).is_subset_of(Interval(1, 2))
+    assert Interval(1, 3).is_subset_of(Interval(1, 3))
+    assert Interval(1, 3).is_subset_of(Interval(1, 4))
