@@ -53,15 +53,15 @@ class Interval(Collection[int], Hashable):
         return self._end
 
     @property
-    def is_empty(self) -> int:
+    def is_empty(self) -> bool:
         return self.start > self.end
 
     @property
-    def is_degenerate(self) -> int:
+    def is_degenerate(self) -> bool:
         return self.start == self.end
 
     @property
-    def is_proper(self) -> int:
+    def is_proper(self) -> bool:
         return self.start < self.end
 
     def __repr__(self) -> str:
