@@ -102,15 +102,7 @@ class Interval(Collection[int], Hashable):
         return self.start <= item <= self.end
 
     def is_subset_of(self, other: Self) -> bool:
-        # handle empty sets
-        if self.is_empty:
-            return True
-        if other.is_empty:
-            return self.is_empty
-
-        # for non-empty sets A and B:
-        # for A to be a subset of B, B has to contain both endpoints of A
-        return (self.start in other) and (self.end in other)
+        return self.is_empty or ((self.start in other) and (self.end in other))
 
     def is_superset_of(self, other: Self) -> bool:
         return other.is_subset_of(self)
