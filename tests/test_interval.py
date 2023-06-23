@@ -225,3 +225,141 @@ def test_intersection_and_disjoint() -> None:
 
     assert_intersection_sym(Interval(4, 5), Interval(2, 4), Interval(4))
     assert_intersection_sym(Interval(5, 6), Interval(2, 4), Interval())
+
+
+def test_is_adjacent_to() -> None:
+    def assert_is_adjacent_to_sym(lhs: Interval, rhs: Interval, expected: bool) -> None:
+        assert lhs.is_adjacent_to(rhs) == expected
+        assert rhs.is_adjacent_to(lhs) == expected
+
+    # empty, empty
+    assert_is_adjacent_to_sym(Interval(), Interval(), False)
+
+    # empty, degenerate
+    assert_is_adjacent_to_sym(Interval(), Interval(1), False)
+
+    # empty, proper
+    assert_is_adjacent_to_sym(Interval(), Interval(1, 3), False)
+
+    # degenerate, degenerate
+    assert_is_adjacent_to_sym(Interval(1), Interval(1), False)
+    assert_is_adjacent_to_sym(Interval(1), Interval(2), True)
+    assert_is_adjacent_to_sym(Interval(1), Interval(3), False)
+
+    # degenerate, proper
+    assert_is_adjacent_to_sym(Interval(-1), Interval(1, 3), False)
+    assert_is_adjacent_to_sym(Interval(0), Interval(1, 3), True)
+    assert_is_adjacent_to_sym(Interval(1), Interval(1, 3), False)
+    assert_is_adjacent_to_sym(Interval(2), Interval(1, 3), False)
+    assert_is_adjacent_to_sym(Interval(3), Interval(1, 3), False)
+    assert_is_adjacent_to_sym(Interval(4), Interval(1, 3), True)
+    assert_is_adjacent_to_sym(Interval(5), Interval(1, 3), False)
+
+    # proper, proper
+    assert_is_adjacent_to_sym(Interval(0, 2), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(0, 3), Interval(4, 6), True)
+    assert_is_adjacent_to_sym(Interval(0, 4), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(0, 5), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(0, 6), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(0, 7), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(0, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(1, 3), Interval(4, 6), True)
+    assert_is_adjacent_to_sym(Interval(1, 4), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(1, 5), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(1, 6), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(1, 7), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(1, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(2, 4), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(2, 5), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(2, 6), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(2, 7), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(2, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(3, 5), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(3, 6), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(3, 7), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(3, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(4, 6), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(4, 7), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(4, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(5, 7), Interval(4, 6), False)
+    assert_is_adjacent_to_sym(Interval(5, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(6, 8), Interval(4, 6), False)
+
+    assert_is_adjacent_to_sym(Interval(7, 8), Interval(4, 6), True)
+    assert_is_adjacent_to_sym(Interval(7, 9), Interval(4, 6), True)
+
+
+def test_union() -> None:
+    def assert_union_sym(
+        lhs: Interval, rhs: Interval, expected: Interval | None
+    ) -> None:
+        assert lhs.union(rhs) == expected
+        assert rhs.union(lhs) == expected
+
+    # empty, empty
+    assert_union_sym(Interval(), Interval(), Interval())
+
+    # empty, degenerate
+    assert_union_sym(Interval(), Interval(1), Interval(1))
+
+    # empty, proper
+    assert_union_sym(Interval(), Interval(1, 3), Interval(1, 3))
+
+    # degenerate, degenerate
+    assert_union_sym(Interval(1), Interval(1), Interval(1))  # equal
+    assert_union_sym(Interval(1), Interval(2), Interval(1, 2))  # adjacent
+    assert_union_sym(Interval(1), Interval(3), None)
+
+    # degenerate, proper
+    assert_union_sym(Interval(-1), Interval(1, 3), None)
+    assert_union_sym(Interval(0), Interval(1, 3), Interval(0, 3))  # adjacent
+    assert_union_sym(Interval(1), Interval(1, 3), Interval(1, 3))  # subset
+    assert_union_sym(Interval(2), Interval(1, 3), Interval(1, 3))  # subset
+    assert_union_sym(Interval(3), Interval(1, 3), Interval(1, 3))  # subset
+    assert_union_sym(Interval(4), Interval(1, 3), Interval(1, 4))  # adjacent
+    assert_union_sym(Interval(5), Interval(1, 3), None)
+
+    # proper, proper
+    assert_union_sym(Interval(0, 1), Interval(3, 5), None)
+    assert_union_sym(Interval(0, 2), Interval(3, 5), Interval(0, 5))
+    assert_union_sym(Interval(0, 3), Interval(3, 5), Interval(0, 5))
+    assert_union_sym(Interval(0, 4), Interval(3, 5), Interval(0, 5))
+    assert_union_sym(Interval(0, 5), Interval(3, 5), Interval(0, 5))
+    assert_union_sym(Interval(0, 6), Interval(3, 5), Interval(0, 6))
+    assert_union_sym(Interval(0, 7), Interval(3, 5), Interval(0, 7))
+
+    assert_union_sym(Interval(1, 2), Interval(3, 5), Interval(1, 5))
+    assert_union_sym(Interval(1, 3), Interval(3, 5), Interval(1, 5))
+    assert_union_sym(Interval(1, 4), Interval(3, 5), Interval(1, 5))
+    assert_union_sym(Interval(1, 5), Interval(3, 5), Interval(1, 5))
+    assert_union_sym(Interval(1, 6), Interval(3, 5), Interval(1, 6))
+    assert_union_sym(Interval(1, 7), Interval(3, 5), Interval(1, 7))
+
+    assert_union_sym(Interval(2, 3), Interval(3, 5), Interval(2, 5))
+    assert_union_sym(Interval(2, 4), Interval(3, 5), Interval(2, 5))
+    assert_union_sym(Interval(2, 5), Interval(3, 5), Interval(2, 5))
+    assert_union_sym(Interval(2, 6), Interval(3, 5), Interval(2, 6))
+    assert_union_sym(Interval(2, 7), Interval(3, 5), Interval(2, 7))
+
+    assert_union_sym(Interval(3, 4), Interval(3, 5), Interval(3, 5))
+    assert_union_sym(Interval(3, 5), Interval(3, 5), Interval(3, 5))
+    assert_union_sym(Interval(3, 6), Interval(3, 5), Interval(3, 6))
+    assert_union_sym(Interval(3, 7), Interval(3, 5), Interval(3, 7))
+
+    assert_union_sym(Interval(4, 5), Interval(3, 5), Interval(3, 5))
+    assert_union_sym(Interval(4, 6), Interval(3, 5), Interval(3, 6))
+    assert_union_sym(Interval(4, 7), Interval(3, 5), Interval(3, 7))
+
+    assert_union_sym(Interval(5, 6), Interval(3, 5), Interval(3, 6))
+    assert_union_sym(Interval(5, 7), Interval(3, 5), Interval(3, 7))
+
+    assert_union_sym(Interval(6, 7), Interval(3, 5), Interval(3, 7))
+    assert_union_sym(Interval(6, 8), Interval(3, 5), Interval(3, 8))
+
+    assert_union_sym(Interval(7, 8), Interval(3, 5), None)

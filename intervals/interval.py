@@ -130,3 +130,21 @@ class Interval(Collection[int], Hashable):
         if intersection_start == intersection_end:
             return type(self)(intersection_start)
         return type(self)(intersection_start, intersection_end)
+
+    def is_adjacent_to(self, other: Self) -> bool:
+        if self.is_empty or other.is_empty:
+            return False
+        return (other.end + 1) == self.start or (self.end + 1) == other.start
+
+    def union(self, other: Self) -> Self | None:
+        if self.is_empty:
+            return other
+        if other.is_empty:
+            return self
+        if not self.is_adjacent_to(other) and self.is_disjoint_from(other):
+            return None
+        union_start = min(self.start, other.start)
+        union_end = max(self.end, other.end)
+        if union_start == union_end:
+            return type(self)(union_start)
+        return type(self)(union_start, union_end)
