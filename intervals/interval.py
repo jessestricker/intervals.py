@@ -106,3 +106,20 @@ class Interval(Collection[int], Hashable):
 
     def is_superset_of(self, other: Self) -> bool:
         return other.is_subset_of(self)
+
+    def is_disjoint_from(self, other: Self) -> bool:
+        return (self.is_empty or other.is_empty) or not (
+            other.start in self
+            or other.end in self
+            or self.start in other
+            or self.end in other
+        )
+
+    def intersection(self, other: Self) -> Self:
+        if self.is_disjoint_from(other):
+            return type(self)()
+        intersection_start = max(self.start, other.start)
+        intersection_end = min(self.end, other.end)
+        if intersection_start == intersection_end:
+            return type(self)(intersection_start)
+        return type(self)(intersection_start, intersection_end)

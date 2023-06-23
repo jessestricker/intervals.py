@@ -169,3 +169,55 @@ def test_is_subset_of() -> None:
     assert not Interval(1, 3).is_subset_of(Interval(1, 2))
     assert Interval(1, 3).is_subset_of(Interval(1, 3))
     assert Interval(1, 3).is_subset_of(Interval(1, 4))
+
+
+def test_intersection_and_disjoint() -> None:
+    def assert_intersection_sym(
+        lhs: Interval, rhs: Interval, expected: Interval
+    ) -> None:
+        assert lhs.intersection(rhs) == expected
+        assert rhs.intersection(lhs) == expected
+        assert lhs.is_disjoint_from(rhs) == expected.is_empty
+        assert rhs.is_disjoint_from(lhs) == expected.is_empty
+
+    # empty, empty
+    assert_intersection_sym(Interval(), Interval(), Interval())
+
+    # empty, degenerate
+    assert_intersection_sym(Interval(), Interval(1), Interval())
+
+    # empty, proper
+    assert_intersection_sym(Interval(), Interval(1, 3), Interval())
+
+    # degenerate, degenerate
+    assert_intersection_sym(Interval(1), Interval(1), Interval(1))
+    assert_intersection_sym(Interval(1), Interval(2), Interval())
+
+    # degenerate, proper
+    assert_intersection_sym(Interval(0), Interval(1, 3), Interval())
+    assert_intersection_sym(Interval(1), Interval(1, 3), Interval(1))
+    assert_intersection_sym(Interval(2), Interval(1, 3), Interval(2))
+    assert_intersection_sym(Interval(3), Interval(1, 3), Interval(3))
+    assert_intersection_sym(Interval(4), Interval(1, 3), Interval())
+
+    # proper, proper
+    assert_intersection_sym(Interval(0, 1), Interval(2, 4), Interval())
+    assert_intersection_sym(Interval(0, 2), Interval(2, 4), Interval(2))
+    assert_intersection_sym(Interval(0, 3), Interval(2, 4), Interval(2, 3))
+    assert_intersection_sym(Interval(0, 4), Interval(2, 4), Interval(2, 4))
+    assert_intersection_sym(Interval(0, 5), Interval(2, 4), Interval(2, 4))
+
+    assert_intersection_sym(Interval(1, 2), Interval(2, 4), Interval(2))
+    assert_intersection_sym(Interval(1, 3), Interval(2, 4), Interval(2, 3))
+    assert_intersection_sym(Interval(1, 4), Interval(2, 4), Interval(2, 4))
+    assert_intersection_sym(Interval(1, 5), Interval(2, 4), Interval(2, 4))
+
+    assert_intersection_sym(Interval(2, 3), Interval(2, 4), Interval(2, 3))
+    assert_intersection_sym(Interval(2, 4), Interval(2, 4), Interval(2, 4))
+    assert_intersection_sym(Interval(2, 5), Interval(2, 4), Interval(2, 4))
+
+    assert_intersection_sym(Interval(3, 4), Interval(2, 4), Interval(3, 4))
+    assert_intersection_sym(Interval(3, 5), Interval(2, 4), Interval(3, 4))
+
+    assert_intersection_sym(Interval(4, 5), Interval(2, 4), Interval(4))
+    assert_intersection_sym(Interval(5, 6), Interval(2, 4), Interval())
