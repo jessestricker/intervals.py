@@ -6,7 +6,12 @@ all: format lint type-check test
 format:
     poetry run -- black .
     poetry run -- isort .
-    poetry run -- pydocstringformatter .
+    poetry run -- pydocstringformatter --write .
+
+format-check:
+    poetry run -- black --check .
+    poetry run -- isort --check .
+    poetry run -- pydocstringformatter --exit-code .
 
 lint:
     poetry run -- pylint ./intervals ./tests

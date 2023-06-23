@@ -28,7 +28,6 @@ profile = "black"
 strict = true
 
 [tool.pydocstringformatter]
-write = true
 max-line-length = 88
 
 [tool.pylint]

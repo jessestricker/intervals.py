@@ -32,7 +32,7 @@ jobs:
         run: poetry install --no-interaction --compile --no-root
 
       - name: Format
-        run: just format
+        run: just format-check
 
   lint:
     name: Lint
