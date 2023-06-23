@@ -26,23 +26,25 @@ class Interval(Collection[int], Hashable):
 
     def __init__(self, *args: int) -> None:
         match len(args):
-            case 0:  # empty overload
-                start = 1
-                end = 0
-            case 1:  # degenerate overload
-                start = args[0]
-                end = args[0]
-            case 2:  # proper overload
-                start = args[0]
-                end = args[1]
-                if not start < end:
+            case 0:
+                # empty interval
+                self._start = 1
+                self._end = 0
+            case 1:
+                # degenerate interval
+                self._start = args[0]
+                self._end = args[0]
+            case 2:
+                # proper interval
+                self._start = args[0]
+                self._end = args[1]
+                if not self._start < self._end:  # pylint: disable=unneeded-not
                     raise ValueError("proper interval requires start < end")
-            case _:  # no overload, error
+            case _:
+                # invalid overload
                 raise ValueError(
                     "this function takes either none, one or two arguments"
                 )
-        self._start = start
-        self._end = end
 
     @property
     def start(self) -> int:
