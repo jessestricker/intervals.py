@@ -1,0 +1,113 @@
+name: Python
+
+on:
+  push: { branches: ["main"] }
+  pull_request:
+
+env:
+  PYTHON_VERSION: "3.11" # keep in sync with /pyproject.toml
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Setup Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Setup just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --compile --no-root
+
+      - name: Format
+        run: just format
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Setup Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Setup just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --compile --no-root
+
+      - name: Lint
+        run: just lint
+
+  type-check:
+    name: Type-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Setup Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Setup just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --compile --no-root
+
+      - name: Type-check
+        run: just type-check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Setup Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Setup just
+        uses: taiki-e/install-action@v2
+        with:
+          tool: just
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --compile --no-root
+
+      - name: Test
+        run: just test
