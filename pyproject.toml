@@ -28,6 +28,7 @@ profile = "black"
 strict = true
 
 [tool.pydocstringformatter]
+summary-quotes-same-line = true
 max-line-length = 88
 
 [tool.pylint]
