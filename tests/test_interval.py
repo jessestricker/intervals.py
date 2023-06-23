@@ -137,38 +137,42 @@ def test_contains() -> None:
     assert 4 not in Interval(1, 3)
 
 
-def test_is_subset_of() -> None:
+def test_subset_superset() -> None:
+    def assert_is_subset_of(sub: Interval, super_: Interval, expected: bool) -> None:
+        assert sub.is_subset_of(super_) == expected
+        assert super_.is_superset_of(sub) == expected
+
     # empty, empty
-    assert Interval().is_subset_of(Interval())
+    assert_is_subset_of(Interval(), (Interval()), True)
     # empty, degenerate
-    assert Interval().is_subset_of(Interval(1))
+    assert_is_subset_of(Interval(), (Interval(1)), True)
     # empty, proper
-    assert Interval().is_subset_of(Interval(1, 3))
+    assert_is_subset_of(Interval(), (Interval(1, 3)), True)
 
     # degenerate, empty
-    assert not Interval(1).is_subset_of(Interval())
+    assert_is_subset_of(Interval(1), (Interval()), False)
     # degenerate, degenerate
-    assert Interval(1).is_subset_of(Interval(1))
-    assert not Interval(0).is_subset_of(Interval(1))
+    assert_is_subset_of(Interval(1), (Interval(1)), True)
+    assert_is_subset_of(Interval(0), (Interval(1)), False)
     # degenerate, proper
-    assert not Interval(0).is_subset_of(Interval(1, 3))
-    assert Interval(1).is_subset_of(Interval(1, 3))
-    assert Interval(2).is_subset_of(Interval(1, 3))
-    assert Interval(3).is_subset_of(Interval(1, 3))
-    assert not Interval(4).is_subset_of(Interval(1, 3))
+    assert_is_subset_of(Interval(0), (Interval(1, 3)), False)
+    assert_is_subset_of(Interval(1), (Interval(1, 3)), True)
+    assert_is_subset_of(Interval(2), (Interval(1, 3)), True)
+    assert_is_subset_of(Interval(3), (Interval(1, 3)), True)
+    assert_is_subset_of(Interval(4), (Interval(1, 3)), False)
 
     # proper, empty
-    assert not Interval(1, 3).is_subset_of(Interval())
+    assert_is_subset_of(Interval(1, 3), (Interval()), False)
     # proper, degenerate
-    assert not Interval(1, 3).is_subset_of(Interval(0))
-    assert not Interval(1, 3).is_subset_of(Interval(1))
-    assert not Interval(1, 3).is_subset_of(Interval(2))
-    assert not Interval(1, 3).is_subset_of(Interval(3))
-    assert not Interval(1, 3).is_subset_of(Interval(4))
+    assert_is_subset_of(Interval(1, 3), (Interval(0)), False)
+    assert_is_subset_of(Interval(1, 3), (Interval(1)), False)
+    assert_is_subset_of(Interval(1, 3), (Interval(2)), False)
+    assert_is_subset_of(Interval(1, 3), (Interval(3)), False)
+    assert_is_subset_of(Interval(1, 3), (Interval(4)), False)
     # proper, proper
-    assert not Interval(1, 3).is_subset_of(Interval(1, 2))
-    assert Interval(1, 3).is_subset_of(Interval(1, 3))
-    assert Interval(1, 3).is_subset_of(Interval(1, 4))
+    assert_is_subset_of(Interval(1, 3), (Interval(1, 2)), False)
+    assert_is_subset_of(Interval(1, 3), (Interval(1, 3)), True)
+    assert_is_subset_of(Interval(1, 3), (Interval(1, 4)), True)
 
 
 def test_intersection_and_disjoint() -> None:
