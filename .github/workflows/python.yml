@@ -3,6 +3,7 @@ name: Python
 on:
   push: { branches: ["main"] }
   pull_request:
+  workflow_dispatch:
 
 env:
   PYTHON_VERSION: "3.11" # keep in sync with /pyproject.toml
@@ -20,7 +21,19 @@ jobs:
         with:
           python-version: "${{ env.PYTHON_VERSION }}"
 
+      - name: Get date
+        id: get-date
+        run: echo "date=$(date --utc '+%Y_%m')" >> $GITHUB_OUTPUT
+
+      - name: Cache Poetry
+        uses: actions/cache@v3
+        id: cache-poetry
+        with:
+          path: ~/.local
+          key: "poetry-${{ runner.os }}-${{ steps.get-date.outputs.date }}"
+
       - name: Setup Poetry
+        if: steps.cache-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
 
       - name: Setup just
@@ -46,7 +59,19 @@ jobs:
         with:
           python-version: "${{ env.PYTHON_VERSION }}"
 
+      - name: Get date
+        id: get-date
+        run: echo "date=$(date --utc '+%Y_%m')" >> $GITHUB_OUTPUT
+
+      - name: Cache Poetry
+        uses: actions/cache@v3
+        id: cache-poetry
+        with:
+          path: ~/.local
+          key: "poetry-${{ runner.os }}-${{ steps.get-date.outputs.date }}"
+
       - name: Setup Poetry
+        if: steps.cache-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
 
       - name: Setup just
@@ -72,7 +97,19 @@ jobs:
         with:
           python-version: "${{ env.PYTHON_VERSION }}"
 
+      - name: Get date
+        id: get-date
+        run: echo "date=$(date --utc '+%Y_%m')" >> $GITHUB_OUTPUT
+
+      - name: Cache Poetry
+        uses: actions/cache@v3
+        id: cache-poetry
+        with:
+          path: ~/.local
+          key: "poetry-${{ runner.os }}-${{ steps.get-date.outputs.date }}"
+
       - name: Setup Poetry
+        if: steps.cache-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
 
       - name: Setup just
@@ -98,7 +135,19 @@ jobs:
         with:
           python-version: "${{ env.PYTHON_VERSION }}"
 
+      - name: Get date
+        id: get-date
+        run: echo "date=$(date --utc '+%Y_%m')" >> $GITHUB_OUTPUT
+
+      - name: Cache Poetry
+        uses: actions/cache@v3
+        id: cache-poetry
+        with:
+          path: ~/.local
+          key: "poetry-${{ runner.os }}-${{ steps.get-date.outputs.date }}"
+
       - name: Setup Poetry
+        if: steps.cache-poetry.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1
 
       - name: Setup just
