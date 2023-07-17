@@ -14,7 +14,7 @@ license = "MIT"
 python = "^3.11" # keep in sync with /.github/workflows/python.yml
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
+black = "^23.7.0"
 isort = "^5.12.0"
 mypy = "^1.4.0"
 pydocstringformatter = "^0.7.3"
