@@ -18,7 +18,7 @@ black = "^23.3.0"
 isort = "^5.12.0"
 mypy = "^1.4.0"
 pydocstringformatter = "^0.7.3"
-pylint = "^2.17.4"
+pylint = "^2.17.5"
 pytest = "^7.3.2"
 
 [tool.isort]
